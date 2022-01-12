@@ -1,16 +1,7 @@
-from glob import glob
 
-import pandas as pd
-import numpy as np
 import networkx as nx
 
-# from fa2 import ForceAtlas2
-import matplotlib.pyplot as plt
-import matplotlib.patheffects as path_effects
-import seaborn as sns
 from pyvis import network as net
-from colormap import rgb2hex
-from matplotlib import colors
 
 
 def plot_interactive(G: nx.Graph, graph_size=800, spatial_position=None, communities=None, labels=True,weight="weight", color=None,
