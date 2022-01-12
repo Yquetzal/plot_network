@@ -4,7 +4,7 @@ import networkx as nx
 from pyvis import network as net
 
 
-def plot_interactive(G: nx.Graph, graph_size=800, spatial_position=None, communities=None, labels=True,weight="weight", color=None,
+def plot_interactive(G: nx.Graph, graph_size=800, spatial_position=None, communities=None, labels=True,weight="weight", node_size=2,
                      title=None):
     """
 
@@ -72,7 +72,7 @@ def plot_interactive(G: nx.Graph, graph_size=800, spatial_position=None, communi
 
     # print(Gcopy.nodes[1])
     to_plot = net.Network(str(graph_size) + "px", str(graph_size) + "px", notebook=True)
-    to_plot.from_nx(Gcopy, default_node_size=2)
+    to_plot.from_nx(Gcopy, default_node_size=node_size)
     to_plot.inherit_edge_colors(False)
     if spatial_position is not None:
         to_plot.toggle_physics(False)
@@ -80,3 +80,4 @@ def plot_interactive(G: nx.Graph, graph_size=800, spatial_position=None, communi
         #    n.update({'physics': False})
     # to_plot.inherit_edge_colors(False)
     return (to_plot)
+
