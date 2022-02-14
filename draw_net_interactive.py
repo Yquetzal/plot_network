@@ -66,7 +66,6 @@ def plot_interactive(G: nx.Graph, graph_size=800, spatial_position=None, communi
 
     if (labels==False):
         nx.set_node_attributes(Gcopy,{n:" " for n in Gcopy.nodes},"label")
-    print(Gcopy.nodes[0])
     nx.set_node_attributes(Gcopy, titles_nodes, "title")
     nx.set_edge_attributes(Gcopy, titles_edges, "title")
 
