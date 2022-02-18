@@ -1,13 +1,6 @@
-
-import networkx as nx
-
-from pyvis import network as net
-
-
 def plot_interactive(G: nx.Graph, graph_size=800, spatial_position=None, communities=None, labels=True,weight="weight", node_size=2,
-                     title=None):
+                     title=None,node_color=None,directed=False,customizable=False):
     """
-
     Parameters
     ----------
     G
@@ -17,10 +10,8 @@ def plot_interactive(G: nx.Graph, graph_size=800, spatial_position=None, communi
     weight
     color
     title
-
     Returns
     -------
-
     """
 
     # copy without attributes
@@ -64,19 +55,58 @@ def plot_interactive(G: nx.Graph, graph_size=800, spatial_position=None, communi
         for n in Gcopy.nodes:
             titles_nodes[n] = titles_nodes[n] + "</br>(x,y):" + str(spatial_position[n][0]) + "," + str(spatial_position[n][1]) + "\n"
 
+    if node_color is not None and node_color!="color":
+        color_values = nx.get_node_attributes(G, node_color)
+
+        colorpalette = plt.get_cmap("coolwarm")
+        offset = colors.TwoSlopeNorm(vcenter=0.)
+        # print(color_values)
+        # print("color",min_val,max_val)
+        color_colors={}
+        for k in color_values:
+            theCol = colorpalette(offset(color_values[k]))
+            color_colors[k] = rgb2hex(int(theCol[0] * 255), int(theCol[1] * 255), int(theCol[2] * 255))
+        nx.set_node_attributes(Gcopy, color_colors, "color")
+        
+        for n in titles_nodes:
+            titles_nodes[n] += " </br>"+node_color+": " + str(color_values[n])
+        #for u, v in titles_:
+         #   titles_edges[(u, v)] = titles_edges[(u, v)] + str(G[u][v][color]) + "\n<br>"
     if (labels==False):
         nx.set_node_attributes(Gcopy,{n:" " for n in Gcopy.nodes},"label")
     nx.set_node_attributes(Gcopy, titles_nodes, "title")
     nx.set_edge_attributes(Gcopy, titles_edges, "title")
+    
+    arrows="false"
+    if directed:
+        arrows="true"
+    options = """var options = {
+      "edges": {
+        "arrows": {
+          "to": {
+        "enabled": """+arrows+""",
+        "scaleFactor": 0.15
+          }
+        }
+        }
+        }"""
+        
 
-    # print(Gcopy.nodes[1])
+
+        
+
+
+            
     to_plot = net.Network(str(graph_size) + "px", str(graph_size) + "px", notebook=True)
     to_plot.from_nx(Gcopy, default_node_size=node_size)
     to_plot.inherit_edge_colors(False)
+    
+    if(customizable):
+        to_plot.show_buttons(filter_=['physics'])
+    else:
+        to_plot.set_options(options)
+        
     if spatial_position is not None:
         to_plot.toggle_physics(False)
-        # for n in to_plot.nodes:
-        #    n.update({'physics': False})
-    # to_plot.inherit_edge_colors(False)
-    return (to_plot)
 
+    return (to_plot)
