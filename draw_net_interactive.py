@@ -86,7 +86,7 @@ def plot_interactive(G: nx.Graph, graph_size=800, spatial_position=None, communi
             titles_nodes[n] += " </br>"+node_color+": " + str(color_values[n])
             
     if node_color=="color":
-        nx.set_node_attributes(Gcopy, nx.get_node_attributes(g,"color"), "color")
+        nx.set_node_attributes(Gcopy, nx.get_node_attributes(G,"color"), "color")
         
         
         #for u, v in titles_:
