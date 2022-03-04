@@ -1,5 +1,5 @@
 def plot_interactive(G: nx.Graph, graph_size=800, spatial_position=None, communities=None, labels=True,weight="weight", node_size=2,
-                     title=None,node_color=None,directed=False,customizable=False):
+                     title=None,node_color=None,directed=False,customizable=False,min_node_size=2,max_node_size=10):
     """
     Parameters
     ----------
@@ -16,6 +16,8 @@ def plot_interactive(G: nx.Graph, graph_size=800, spatial_position=None, communi
 
     # copy without attributes
     Gcopy = nx.Graph()
+    if directed:
+        Gcopy=nx.DiGraph()
     Gcopy.add_edges_from((u, v) for u, v in G.edges())
     Gcopy.add_nodes_from(u for u in G.nodes())
 
@@ -31,6 +33,13 @@ def plot_interactive(G: nx.Graph, graph_size=800, spatial_position=None, communi
         for n in titles_nodes:
             titles_nodes[n] += " </br>group: " + str(communities[n])
 
+    if isinstance(node_size,str):
+        node_attr=nx.get_node_attributes(G,node_size)
+        max_attr = max(list(node_attr.values()))
+        new_sizes ={k:max(min_node_size,v/max_attr*max_node_size) for k,v in node_attr.items()}
+        nx.set_node_attributes(Gcopy,new_sizes,"size")
+        
+        
     if spatial_position is not None:
         if isinstance(spatial_position, str):
             spatial_position = nx.get_node_attributes(G, spatial_position)
@@ -66,10 +75,15 @@ def plot_interactive(G: nx.Graph, graph_size=800, spatial_position=None, communi
         for k in color_values:
             theCol = colorpalette(offset(color_values[k]))
             color_colors[k] = rgb2hex(int(theCol[0] * 255), int(theCol[1] * 255), int(theCol[2] * 255))
+    
         nx.set_node_attributes(Gcopy, color_colors, "color")
-        
         for n in titles_nodes:
             titles_nodes[n] += " </br>"+node_color+": " + str(color_values[n])
+            
+    if node_color=="color":
+        nx.set_node_attributes(Gcopy, nx.get_node_attributes(g,"color"), "color")
+        
+        
         #for u, v in titles_:
          #   titles_edges[(u, v)] = titles_edges[(u, v)] + str(G[u][v][color]) + "\n<br>"
     if (labels==False):
