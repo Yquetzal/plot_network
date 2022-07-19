@@ -127,6 +127,7 @@ def plot_interactive(G: nx.Graph, graph_size=800, spatial_position=None, communi
         to_plot.set_options(options)
         
     if spatial_position is not None:
+        to_plot.show_buttons(filter_=['physics'])
         to_plot.toggle_physics(False)
 
     return (to_plot)
