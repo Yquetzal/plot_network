@@ -2,6 +2,7 @@ import networkx as nx
 from pyvis import network as net
 from colormap import rgb2hex
 from matplotlib import colors
+import matplotlib.pyplot as plt
 
 def plot_interactive(G: nx.Graph, graph_size=800, spatial_position=None, communities=None, labels=True,weight="weight", node_size=2,
                      title=None,node_color=None,directed=False,customizable=False,min_node_size=2,max_node_size=10):
