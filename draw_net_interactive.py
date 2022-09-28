@@ -73,13 +73,22 @@ def plot_interactive(G: nx.Graph, graph_size=800, spatial_position=None, communi
     if node_color is not None and node_color!="color":
         color_values = nx.get_node_attributes(G, node_color)
 
-        colorpalette = plt.get_cmap("coolwarm")
-        offset = colors.TwoSlopeNorm(vcenter=0.)
-        # print(color_values)
+        centered0=False
+        min_color = min(color_values.values())
+        max_color= max(color_values.values())
+        if min_color<0:
+            colorpalette = plt.get_cmap("coolwarm")
+            centered0 = True 
+            offset = colors.TwoSlopeNorm(vcenter=0.,vmin=min_color,vmax=max_color)
+        else:
+            colorpalette = plt.get_cmap("magma")
+            offset = colors.Normalize(vmin=min_color,vmax=max_color)
+
         # print("color",min_val,max_val)
         color_colors={}
         for k in color_values:
             theCol = colorpalette(offset(color_values[k]))
+
             color_colors[k] = rgb2hex(int(theCol[0] * 255), int(theCol[1] * 255), int(theCol[2] * 255))
     
         nx.set_node_attributes(Gcopy, color_colors, "color")
@@ -127,7 +136,6 @@ def plot_interactive(G: nx.Graph, graph_size=800, spatial_position=None, communi
         to_plot.set_options(options)
         
     if spatial_position is not None:
-        to_plot.show_buttons(filter_=['physics'])
         to_plot.toggle_physics(False)
 
     return (to_plot)
